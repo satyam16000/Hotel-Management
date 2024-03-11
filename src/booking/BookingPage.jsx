@@ -1,7 +1,6 @@
 import { Form, FormGroup, Label, Input, Card, Button } from "reactstrap"
-import { useEffect, useState } from 'react';
-import { API_URL } from "../constants";
-import axios from "axios";
+import { useState } from 'react';
+
 
 import "./BookingPage.css"
 
@@ -40,21 +39,7 @@ export default function BookingPage() {
     const [startEpoch, setStartEpoch] = useState(0);
     const [endEpoch, setEndEpoch] = useState(0);
 
-    useEffect(() => {
-        console.log("startTime=" + startTime + ", endTime=" + endTime + ", startDate=" + startDate + ", endDate=" + endDate + ", roomType=" + roomType + ", roomNumber=" + roomNumber + ", name=" + name + ", mail=" + mail + "");
-        if (startTime === "" || endTime === "" || startDate === "" || endDate === "") {
-            setPrice("Please select a room type and time");
-            return;
-        }
-        const startEpoch = convertDateToEpoch(startDate) + convertTimeToEpoch(startTime);
-        const endEpoch = convertDateToEpoch(endDate) + convertTimeToEpoch(endTime);
-        setStartEpoch(startEpoch);
-        setEndEpoch(endEpoch);
-        const duration = endEpoch - startEpoch;
-        const hours = Math.floor(duration / 3600);
-        const rate = rooms.find(room => room.roomType == roomType).roomChargePerHour;
-        setPrice(`Price: ₹${hours * rate}`);
-    }, [roomType, startTime, endTime, startDate, endDate])
+    
 
     const [price, setPrice] = useState("Please select a room type and time");
 
@@ -67,14 +52,6 @@ export default function BookingPage() {
             startTime: startEpoch,
             endTime: endEpoch
         }
-        axios.post(`${API_URL}/api/v1/booking/`, booking)
-            .then((response) => {
-                if (response.status >= 200 && response.status < 300) {
-                    alert("Booking successful");
-                } else {
-                    alert("Booking failed");
-                }
-            })
     }
 
     return (
@@ -155,25 +132,4 @@ export default function BookingPage() {
             </Card>
         </div>
     )
-}
-
-function addMinutes(date, minutes) {
-    return new Date(date.getTime() + minutes * 60000)
-}
-
-
-function convertDateToEpoch(dateString) {
-    const dateParts = dateString.split("-");
-    const year = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1;
-    const day = parseInt(dateParts[2], 10);
-    return Date.UTC(year, month, day) / 1000;
-}
-
-
-function convertTimeToEpoch(timeString) {
-    const timeParts = timeString.split(":");
-    const hours = parseInt(timeParts[0], 10);
-    const minutes = parseInt(timeParts[1], 10);
-    return (hours * 3600 + minutes * 60); // seconds since midnight
 }

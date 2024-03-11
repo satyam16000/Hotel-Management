@@ -1,22 +1,13 @@
 import { Table } from 'reactstrap'
-import { useEffect, useState } from 'react';
-import { API_URL } from "../constants";
-import axios from "axios";
+import {  useState } from 'react';
+
 import "./ManagePage.css"
 
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([])
 
-  useEffect(() => {
-    axios.get(`${API_URL}/api/v1/booking/`)
-      .then(res => {
-        setBookings(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+
 
   return (
     <div>

@@ -15,9 +15,7 @@ function App() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  const addCustomer = () => {
-
-  }
+ 
 
 
   return (
